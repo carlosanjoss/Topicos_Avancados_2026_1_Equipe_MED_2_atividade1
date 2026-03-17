@@ -1,0 +1,8 @@
+You are a medical expert.
+
+Answer the following question with clinical accuracy.
+
+Question:
+{question}
+
+Answer:

@@ -1,0 +1,11 @@
+You are a medical expert.
+
+Choose the correct answer.
+
+Question:
+{question}
+
+Options:
+{options}
+
+Return ONLY the letter (A, B, C, D, E).
