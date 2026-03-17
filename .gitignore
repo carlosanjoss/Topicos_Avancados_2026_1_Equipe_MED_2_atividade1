@@ -18,12 +18,8 @@ dist/
 .env
 .env.local
 config.json
-data/raw/
-data/curated/
-results/
 .cache/
 *.pt
 *.bin
-models/
 *.tmp
 *.temp
