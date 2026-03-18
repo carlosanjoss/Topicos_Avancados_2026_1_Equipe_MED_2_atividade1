@@ -13,65 +13,119 @@ def safe_call(fn, prompt):
     try:
         response = fn(prompt)
 
-        if isinstance(response, str) and "error" in response.lower():
+        if not isinstance(response, str):
+            return "ERROR: invalid response"
+
+        if "error" in response.lower():
             return f"ERROR: {response}"
 
-        return response
+        return response.strip()
+
     except Exception as e:
         return f"ERROR: {str(e)}"
 
 
+def load_existing_results(path):
+    if not os.path.exists(path):
+        return []
+
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            content = f.read().strip()
+
+            if not content:
+                print("⚠️ Arquivo vazio → reiniciando")
+                return []
+
+            return json.loads(content)
+
+    except Exception as e:
+        print(f"⚠️ Arquivo corrompido → resetando: {e}")
+        return []
+
+
+def save_results(path, results):
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(results, f, indent=2, ensure_ascii=False)
+
+
 def run():
-    with open("data/curated/curated_open.json", encoding="utf-8") as f:
+    input_path = "data/curated/curated_open.json"
+    output_path = "results/open_results.json"
+
+    # carregar dataset
+    with open(input_path, encoding="utf-8") as f:
         data = json.load(f)
 
     prompt_template = load_prompt()
 
-    results = []
+    # carregar checkpoint
+    results = load_existing_results(output_path)
+    print(f"🔁 Já processadas: {len(results)}")
+
+    # mapear processados
+    processed = set()
+    for r in results:
+        if isinstance(r, dict) and "question" in r:
+            processed.add(r["question"])
 
     total = len(data)
     start_total = time.time()
 
     for i, item in enumerate(data):
-        print(f"\n--- [{i+1}/{total}] Processando ---")
 
-        question = item["question"]
+        question = item.get("question")
+
+        if not question:
+            print(f"⚠️ Questão inválida no índice {i}")
+            continue
+
+        if question in processed:
+            print(f"[SKIP] {question[:60]}...")
+            continue
+
+        print(f"\n--- [{len(results)+1}/{total}] Processando ---")
+
         prompt = prompt_template.replace("{question}", question)
 
-        start = time.time()
+        start_q = time.time()
 
+        # 🔥 USAR safe_call (corrigido)
         llama = safe_call(ask_llama, prompt)
         mistral = safe_call(ask_mistral, prompt)
         phi = safe_call(ask_phi, prompt)
 
-        end = time.time()
+        end_q = time.time()
 
-        tempo_questao = end - start
+        tempo_q = end_q - start_q
+        elapsed = end_q - start_total
 
-        elapsed = end - start_total
-        avg = elapsed / (i + 1)
-        remaining = avg * (total - (i + 1))
+        avg = elapsed / (len(results) + 1)
+        remaining = avg * (total - (len(results) + 1))
 
-        print(f"Tempo questão: {tempo_questao:.2f}s")
-        print(f"Tempo médio: {avg:.2f}s")
-        print(f"Tempo restante estimado: {remaining/60:.2f} min")
+        print(f"Tempo questão: {tempo_q:.2f}s")
+        print(f"Médio: {avg:.2f}s | Restante: {remaining/60:.2f} min")
 
-        results.append({
+        result_obj = {
             "question": question,
-            "gold": item["gold_answer"],
+            "gold": item.get("gold_answer"),
             "llama": llama,
             "mistral": mistral,
             "phi": phi,
-            "time": round(tempo_questao, 2)
-        })
+            "time": round(tempo_q, 2)
+        }
 
-    os.makedirs("results", exist_ok=True)
+        results.append(result_obj)
+        processed.add(question)
 
-    with open("results/open_results.json", "w", encoding="utf-8") as f:
-        json.dump(results, f, indent=2, ensure_ascii=False)
+        # salvar incremental
+        save_results(output_path, results)
+
+        print(f"💾 Salvo ({len(results)}/{total})")
 
     total_time = time.time() - start_total
-    print(f"\nTempo total: {total_time/60:.2f} minutos")
+    print(f"\n✔ Finalizado em {total_time/60:.2f} minutos")
 
 
 if __name__ == "__main__":
