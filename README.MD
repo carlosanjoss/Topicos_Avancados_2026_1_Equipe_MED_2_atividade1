@@ -75,7 +75,15 @@ Os dados foram separados em:
 
 ## Execução
 
-### 1. Inferência
+### 1. Requerimento
+
+Primeiro instale o ambiente virtual, logo após os equirements.txt:
+
+```
+pip install -r requirements.txt
+```
+
+### 2. Inferência
 
 Para rodar os modelos nas questões:
 
@@ -86,7 +94,7 @@ python src/inference_opq.py
 
 ---
 
-### 2. Avaliação
+### 3. Avaliação
 
 Para calcular as métricas:
 
