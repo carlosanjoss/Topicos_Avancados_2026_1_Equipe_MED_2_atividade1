@@ -1,5 +1,7 @@
 # Projeto de Avaliação de Modelos de Linguagem para Questões Médicas
 
+### Parte de Carlos Eduardo E. M. P. Anjos
+
 ## Descrição
 
 Este projeto tem como objetivo avaliar o desempenho de diferentes modelos de linguagem na resolução de questões médicas, incluindo questões de múltipla escolha e questões discursivas. A avaliação foi realizada utilizando métricas tradicionais e semânticas, permitindo uma análise mais robusta da qualidade das respostas geradas.
@@ -75,15 +77,37 @@ Os dados foram separados em:
 
 ## Execução
 
-### 1. Requerimento
+### 1. Baixar o Ollama:
 
-Primeiro instale o ambiente virtual, logo após os equirements.txt:
+Baixe o Ollama diretamente no site
+
+```
+https://ollama.com/download
+```
+
+### 2. Instale os 3 modelos:
+
+```
+ollama pull llama3
+ollama pull mistral
+ollama pull phi3
+```
+
+### 3. Inicie o servidor:
+
+```
+ollama serve
+```
+
+### 4. Requerimento
+
+Primeiro instale o ambiente virtual, logo após os requirements.txt:
 
 ```
 pip install -r requirements.txt
 ```
 
-### 2. Inferência
+### 5. Inferência
 
 Para rodar os modelos nas questões:
 
@@ -94,7 +118,7 @@ python src/inference_opq.py
 
 ---
 
-### 3. Avaliação
+### 6. Avaliação
 
 Para calcular as métricas:
 

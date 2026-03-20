@@ -8,4 +8,4 @@ Question:
 Options:
 {options}
 
-Return ONLY the letter (A, B, C, D, E).
+Select the single best option and return ONLY the corresponding letter (A, B, C, D, or E), without any explanation, reasoning, or additional text.

@@ -190,7 +190,7 @@
       "D": "Positive Predictive Value no change and Negative Predictive Value",
       "E": "Positive Predictive Value and Negative Predictive Value no change"
     },
-    "answer": "G",
+    "answer": "B",
     "explanation": "(G) Positive Predictive Value decreases and Negative Predictive Value increases\nLowering the PSA biopsy threshold from 4.1 to 2.0 ng/mL increases sensitivity\nand decreases specificity, consistent with ROC behavior for continuous tests.[1]\n[2] In PSA screening, this shift yields more true positives but also more false\npositives, increasing test positivity and false-positive biopsies, overdiagnosis,\nand overtreatment.[3][4][5][6][7] As a result:\nPPV decreases because a larger fraction of positives are false positives\nwhen specificity falls and prevalence is unchanged.[2][6][8]\nNPV increases because higher sensitivity reduces false negatives, making a\nnegative result more likely to be truly disease-free.[2][8][9]\nThese predictive value changes with a lower cutoff are well described for PSA-\nbased screening where moving from 4.0 to lower thresholds (e.g., 2.5–3.0 ng/mL)\nincreases detection but reduces specificity and PPV while improving the\nreassurance of a negative test.[3][5][6][10] The American College of Physicians\nguidance notes that lower thresholds yield more false positives without clear net\nbenefit.[4]",
     "references": [
       "1 ng/mL. If the",
