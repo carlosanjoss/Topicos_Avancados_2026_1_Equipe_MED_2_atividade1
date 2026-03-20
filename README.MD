@@ -99,7 +99,7 @@ ollama pull phi3
 ollama serve
 ```
 
-### 4. Requerimento
+### 4. Requerimentos:
 
 Primeiro instale o ambiente virtual, logo após os requirements.txt:
 
@@ -129,6 +129,20 @@ python src/evaluate.py
 ---
 
 ## Resultados
+
+Para as questões de múltipla escolha foi usado a métrica de acurácia , acurácia é a proporção de respostas corretas em relação ao total de questões. Para as questões
+de resposta livre foram usados 5 métricas:
+
+BLEU - mede o quanto o texto gerado coincide com um texto de referência com base na sobreposição de n-gramas, penalizando sequências muito curtas;
+
+ROUGE - avalia a qualidade do texto gerado medindo o quanto ele cobre o conteúdo do texto de referência, também baseado em sobreposição de palavras ou n-gramas;
+
+Similaridade Semântica - mede o quanto dois textos têm o mesmo significado, mesmo que usem palavras diferentes, geralmente usando embeddings;
+
+F1 - é a média harmônica entre precisão e recall, equilibrando erros de falsos positivos e falsos negativos;
+
+BERTScore - compara textos usando representações profundas de linguagem (BERT), avaliando similaridade semântica palavra por palavra com base em contexto;
+
 
 ### 🔹 Questões de Múltipla Escolha (Accuracy)
 
