@@ -54,17 +54,16 @@ def run():
     input_path = "data/curated/curated_open.json"
     output_path = "results/open_results.json"
 
-    # carregar dataset
     with open(input_path, encoding="utf-8") as f:
         data = json.load(f)
 
     prompt_template = load_prompt()
 
-    # carregar checkpoint
+
     results = load_existing_results(output_path)
     print(f"🔁 Já processadas: {len(results)}")
 
-    # mapear processados
+
     processed = set()
     for r in results:
         if isinstance(r, dict) and "question" in r:
@@ -91,7 +90,6 @@ def run():
 
         start_q = time.time()
 
-        # 🔥 USAR safe_call (corrigido)
         llama = safe_call(ask_llama, prompt)
         mistral = safe_call(ask_mistral, prompt)
         phi = safe_call(ask_phi, prompt)
@@ -119,7 +117,6 @@ def run():
         results.append(result_obj)
         processed.add(question)
 
-        # salvar incremental
         save_results(output_path, results)
 
         print(f"💾 Salvo ({len(results)}/{total})")

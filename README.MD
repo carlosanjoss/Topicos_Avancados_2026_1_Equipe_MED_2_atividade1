@@ -1,216 +1,168 @@
-# 🧠 Curadoria de Datasets e Inferência com LLMs (Domínio Médico)
+# Projeto de Avaliação de Modelos de Linguagem para Questões Médicas
 
-## 📌 Descrição do Projeto
+## Descrição
 
-Este projeto foi desenvolvido como parte da atividade avaliativa da disciplina de Tópicos Avançados, com foco na **curadoria de datasets médicos** e na **avaliação de modelos de linguagem (LLMs)** em tarefas de inferência.
+Este projeto tem como objetivo avaliar o desempenho de diferentes modelos de linguagem na resolução de questões médicas, incluindo questões de múltipla escolha e questões discursivas. A avaliação foi realizada utilizando métricas tradicionais e semânticas, permitindo uma análise mais robusta da qualidade das respostas geradas.
 
-O objetivo principal é analisar o desempenho de diferentes modelos em dois tipos de tarefas:
+Os modelos avaliados foram:
 
-* **Questões discursivas (open-ended)**
-* **Questões de múltipla escolha (MCQ)**
-
----
-
-## 🎯 Objetivos
-
-* Realizar a **curadoria manual e assistida** dos dados
-* Aplicar **modelos de linguagem locais (LLMs)** para inferência
-* Comparar o desempenho dos modelos utilizando **métricas quantitativas**
-* Avaliar diferenças de desempenho entre tarefas objetivas e discursivas
+* LLaMA
+* Mistral
+* Phi
 
 ---
 
-## 🗂️ Estrutura do Projeto
+## Estrutura do Projeto
 
 ```
-Topicos_Avancados_2026-1_Equipe_MED_2_atividade1
-
+TOPICOS_AVANCADOS_2026_1_EQUIPE_MED/
+│
 ├── data/
-│   ├── raw/
 │   ├── curated/
+│   │   ├── curated_mcq.json
+│   │   └── curated_open.json
+│   │
+│   └── raw/
+│       ├── multiple_choice.json
+│       ├── open_questions.jsonl
+│       └── prova.pdf
+│
+├── prompts/
+│   ├── mcq_prompt.txt
+│   └── open_prompt.txt
+│
+├── results/
+│   ├── mcq_metrics.json
+│   ├── mcq_results.json
+│   ├── open_metrics.json
+│   └── open_results.json
 │
 ├── src/
 │   ├── models/
 │   │   └── local.py
+│   │
 │   ├── curator_mcq.py
-│   ├── curator_open.py
-│   ├── inference_open.py
-│   ├── inference_mcq.py
-│   ├── evaluation_open.py
+│   ├── curator_opq.py
 │   ├── evaluation_mcq.py
+│   ├── evaluation_open.py
+│   ├── extract_pdf.py
+│   ├── inference_mcq.py
+│   ├── inference_opq.py
 │   └── utils.py
 │
-├── results/
-│   ├── open_results.json
-│   ├── mcq_results.json
-│   ├── open_metrics.json
-│   └── mcq_metrics.json
-│
-├── prompts/
-└── README.md
+├── venv/
+├── .gitignore
+├── README.md
+└── requirements.txt
 ```
 
 ---
 
-## 🧪 Modelos Utilizados
+## Curadoria dos Dados
 
-Os modelos foram executados localmente utilizando o **Ollama**, garantindo independência de APIs externas:
+A curadoria foi realizada manualmente, garantindo:
 
-* `llama3`
-* `mistral`
-* `phi3`
+* Classificação de dificuldade
+* Área médica
+* Referência confiável
 
----
+Os dados foram separados em:
 
-## ⚙️ Como Executar o Projeto
-
-### 1. Instalar o Ollama
-
-```
-https://ollama.com/download
-```
+* Questões de múltipla escolha (MCQ)
+* Questões discursivas (Open Questions)
 
 ---
 
-### 2. Baixar os modelos
+## Execução
 
-```bash
-ollama pull llama3
-ollama pull mistral
-ollama pull phi3
+### 1. Inferência
+
+Para rodar os modelos nas questões:
+
 ```
-
----
-
-### 3. Executar o servidor local
-
-```bash
-ollama serve
-```
-
----
-
-### 4. Rodar a curadoria
-
-```bash
-python src/curator_mcq.py
-python src/curator_open.py
-```
-
----
-
-### 5. Executar inferência
-
-```bash
-python src/inference_open.py
 python src/inference_mcq.py
+python src/inference_opq.py
 ```
 
 ---
 
-### 6. Avaliar resultados
+### 2. Avaliação
 
-```bash
-python src/evaluation_open.py
-python src/evaluation_mcq.py
+Para calcular as métricas:
+
+```
+python src/evaluate.py
 ```
 
 ---
 
-## 📊 Métricas Utilizadas
+## Resultados
+
+### 🔹 Questões de Múltipla Escolha (Accuracy)
+
+```
+LLaMA   : 0.4660
+Mistral : 0.3981
+Phi     : 0.3395
+```
+
+O modelo LLaMA apresentou melhor desempenho em questões objetivas, indicando maior capacidade de selecionar alternativas corretas.
+
+---
 
 ### 🔹 Questões Discursivas
 
-* **BLEU** → Similaridade textual
-* **ROUGE-L** → Sobreposição semântica
+```
+LLaMA
+- BLEU: 0.0817
+- ROUGE: 0.1595
+- Similaridade Semântica: 0.7811
+- F1: 0.2462
+- BERTScore: 0.7874
 
-### 🔹 Questões Objetivas
+Mistral
+- BLEU: 0.1158
+- ROUGE: 0.1990
+- Similaridade Semântica: 0.8069
+- F1: 0.2941
+- BERTScore: 0.8155
 
-* **Acurácia** → Proporção de respostas corretas
-
----
-
-## 📈 Resultados Obtidos
-
-### ✔️ Acurácia (MCQ)
-
-* LLaMA: **46.6%**
-* Mistral: **39.8%**
-* Phi: **33.9%**
-
----
-
-### ✔️ Métricas Discursivas
-
-| Modelo  | BLEU  | ROUGE |
-| ------- | ----- | ----- |
-| LLaMA   | 0.015 | 0.159 |
-| Mistral | 0.021 | 0.199 |
-| Phi     | 0.010 | 0.163 |
+Phi
+- BLEU: 0.0837
+- ROUGE: 0.1638
+- Similaridade Semântica: 0.7622
+- F1: 0.2630
+- BERTScore: 0.8015
+```
 
 ---
 
-## 🧠 Análise dos Resultados
+## Análise dos Resultados
 
-* O modelo **LLaMA apresentou melhor desempenho em tarefas objetivas**, indicando maior capacidade de seleção correta de alternativas.
-* O modelo **Mistral apresentou melhor desempenho em tarefas discursivas**, com maior sobreposição semântica (ROUGE).
-* O modelo **Phi apresentou desempenho inferior em ambos os cenários**.
+Nos resultados discursivos, o modelo Mistral apresentou desempenho superior em todas as métricas relevantes, especialmente nas métricas semânticas, indicando maior capacidade de compreender e gerar respostas alinhadas ao conteúdo esperado.
 
-Observa-se que o desempenho dos modelos varia de acordo com o tipo de tarefa, evidenciando que **não existe um modelo universalmente superior**, mas sim modelos mais adequados para contextos específicos.
+O modelo Phi apresentou desempenho intermediário, enquanto o LLaMA teve menor desempenho nesse tipo de tarefa.
 
----
-
-## ⚠️ Considerações Importantes
-
-* Valores baixos de BLEU são esperados, pois modelos de linguagem tendem a **parafrasear respostas**, em vez de reproduzir literalmente o texto.
-* O uso de modelos locais garante:
-
-  * Reprodutibilidade
-  * Independência de APIs pagas
-  * Execução offline
+Por outro lado, nas questões de múltipla escolha, o LLaMA obteve melhor desempenho, sugerindo maior eficácia em tarefas objetivas.
 
 ---
 
-## 👥 Equipe
+## Discussão
 
-* Carlos
+Os resultados evidenciam que:
 
----
+* Métricas como BLEU e ROUGE possuem limitações para avaliação de respostas abertas
+* Métricas semânticas (BERTScore e similaridade) são mais adequadas para esse tipo de tarefa
+* Existe um trade-off entre desempenho em questões objetivas e discursivas
 
-## 🎥 Vídeo Demonstrativo
 
-(Adicionar link aqui)
-
----
-
-## 📄 Tutorial em PDF
-
-(Adicionar link ou anexar conforme solicitado)
 
 ---
 
-## ✅ Conclusão
+## Conclusão
 
-O projeto demonstrou, na prática, o comportamento de diferentes LLMs em tarefas médicas, evidenciando:
+O modelo Mistral demonstrou melhor desempenho em tarefas discursivas, sendo mais adequado para geração de respostas abertas em contexto médico. Já o LLaMA apresentou melhor desempenho em questões de múltipla escolha.
 
-* Diferenças entre **raciocínio objetivo e geração textual**
-* Limitações de métricas tradicionais em avaliação de linguagem
-* Importância da escolha do modelo conforme a tarefa
-
----
-
-## 🚀 Tecnologias Utilizadas
-
-* Python
-* Ollama
-* NLTK
-* Rouge-score
-* JSON
-
----
-
-## 📌 Reprodutibilidade
-
-Todo o projeto pode ser reproduzido seguindo as etapas descritas neste README.
+Os resultados reforçam a importância do uso de métricas semânticas na avaliação de modelos de linguagem em tarefas complexas.
 
 ---

@@ -58,18 +58,15 @@ def run():
     input_path = "data/curated/curated_mcq.json"
     output_path = "results/mcq_results.json"
 
-    # carregar dados
     with open(input_path, encoding="utf-8") as f:
         data = json.load(f)
 
     prompt_template = load_prompt()
 
-    # carregar checkpoint
     results = load_existing_results(output_path)
 
     print(f"🔁 Itens já processados: {len(results)}")
 
-    # mapear processados
     processed = set()
     for r in results:
         if isinstance(r, dict) and "question" in r:
@@ -92,7 +89,6 @@ def run():
 
         print(f"\n--- [{len(results)+1}/{total}] Processing ---")
 
-        # validar options
         if "options" not in item:
             print("❌ Sem options → pulando")
             continue
@@ -104,7 +100,6 @@ def run():
 
         start_q = time.time()
 
-        # chamadas (sem quebrar execução)
         phi = safe_call(ask_phi, prompt)
         mistral = safe_call(ask_mistral, prompt)
         llama = safe_call(ask_llama, prompt)
@@ -132,7 +127,6 @@ def run():
         results.append(result_item)
         processed.add(question)
 
-        # salvar incremental
         save_results(output_path, results)
 
         print(f"💾 Salvo ({len(results)}/{total})")
